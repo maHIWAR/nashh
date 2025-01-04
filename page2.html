@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Reader</title>
+    <style>
+   body {
+       margin: 0;
+       padding: 20px;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       min-height: 100vh;
+       background-image: url('./desk\ image\ bg.jpg'); 
+       background-size: cover;  
+       background-position: center; 
+       background-repeat: no-repeat;  
+      position: relative;
+   }
+   
+        .book-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+       .page-container {
+           position: relative;
+           width: 800px;
+           height: 600px;
+           overflow: hidden;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+       }
+       
+       .pages {
+           position: relative;
+           width: 100%;
+           height: 100%;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+}
+
+        .page {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+
+        .page.active {
+            display: block; 
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .page-number {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .page-input {
+            width: 30px;
+            padding: 3px;
+            font-size: 16px;
+            text-align: center;
+            margin: 0 5px;    
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            width: 100%;
+            padding: 0 20px; 
+}
+
+        .page-number {
+             font-size: 18px;
+             font-weight: bold;
+             text-align: center;
+}
+
+#prevBtn {
+    position: absolute;
+    left: 10px;
+    top: 55%;
+    transform: translateY(-50%);
+    min-width: 70px;   
+    min-height: 90px;  
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+
+}
+.page-number {
+    position: absolute;
+    left: 50%;
+    border-top-left-radius: 40%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1;           
+    background-color: transparent; 
+    padding: 5px 10px;     
+    border-radius: 4px;    
+}
+
+#nextBtn {
+    position: absolute;
+    right: 10px;
+    top: 55%;
+    transform: translateY(-50%);
+    min-width: 70px;   
+    min-height: 90px;  
+    background-color: transparent;
+    cursor: pointer;
+    opacity: 0;
+    
+}
+#backtomain {
+    position: absolute;
+    left: 10px;           
+    bottom: -40px;       
+    padding: 26px 65px;  
+    background-color:transparent; 
+    color: white;    
+    border: 0;  
+    cursor: pointer;
+    font-size: 0px;    
+}
+
+
+    </style>
+</head>
+<body>
+    <div class="book-container">
+       <div class="page-container">
+           <div class="pages">
+               <img class="page" src="./Manual Pages/Nash Car Manaual Pages2.jpg" alt="Book Page">
+               <img class="page" src="./Manual Pages/Nash Car Manaual Pages3.jpg" alt="Book Page">
+               <img class="page" src="./Manual Pages/Nash Car Manaual Pages4.jpg" alt="Book Page">
+               <img class="page" src="./Manual Pages/Nash Car Manaual Pages5.jpg" alt="Book Page">
+               <img class="page" src="./Manual Pages/Nash Car Manaual Pages6.jpg" alt="Book Page">
+           </div>
+       </div>
+       
+        <div class="controls">
+            <button id="prevBtn">Previous</button>
+            <div class="page-number">
+                Page <input type="number" id="pageInput" class="page-input" min="1" value="1"> of <span id="totalPages">0</span>
+            </div>
+            <button id="nextBtn">Next</button>
+            <button id="backtomain" onclick="location.href='index.html'">back to home</button>
+        </div>
+    </div>
+
+    <script>
+       const pages = document.querySelectorAll('.page');
+       const prevBtn = document.getElementById('prevBtn');
+       const nextBtn = document.getElementById('nextBtn');
+       const pageInput = document.getElementById('pageInput')
+       const totalPagesSpan = document.getElementById('totalPages');
+       
+       const totalPages = pages.length;
+       let currentPageNum = 1;
+       
+       totalPagesSpan.textContent = totalPages;
+       
+       function updatePage() {
+           pages.forEach(page => {
+               page.classList.remove('active');
+           });
+           
+           pages[currentPageNum - 1].classList.add('active');
+           
+           pageInput.value = currentPageNum;
+           
+           prevBtn.disabled = currentPageNum === 1;
+           nextBtn.disabled = currentPageNum === totalPages;
+       }
+       
+       updatePage();
+       
+       prevBtn.addEventListener('click', () => {
+           if (currentPageNum > 1) {
+               currentPageNum--;
+               updatePage();
+           }
+       });
+       
+       nextBtn.addEventListener('click', () => {
+           if (currentPageNum < totalPages) {
+               currentPageNum++;
+               updatePage();
+           }
+       });
+       
+       pageInput.addEventListener('change', () => {
+           const newPage = parseInt(pageInput.value);
+           if (newPage >= 1 && newPage <= totalPages) {
+               currentPageNum = newPage;
+               updatePage();
+           } else {
+               pageInput.value = currentPageNum;
+           }
+       });
+       
+       document.addEventListener('keydown', (e) => {
+           if (e.key === 'ArrowLeft' && currentPageNum > 1) {
+               currentPageNum--;
+               updatePage();
+           } else if (e.key === 'ArrowRight' && currentPageNum < totalPages) {
+               currentPageNum++;
+               updatePage();
+           }
+       });
+       
+    </script>
+</body>
+</html>
